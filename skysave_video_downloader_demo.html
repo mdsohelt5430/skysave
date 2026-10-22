@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#5b35e8">
+<title>SkySave — Video Downloader</title>
+<style>
+:root{color-scheme:dark;--bg:#130d32;--panel:#21154c;--purple:#6b35ed;--pink:#c20cf0;--text:#fff;--muted:#c8c1e8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Bengali",sans-serif;background:linear-gradient(145deg,#3821d7,#8d10e9 55%,#24104b);color:var(--text);min-height:100vh}
+header{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:#170d35aa;border-bottom:1px solid #ffffff25}
+.logo{font-size:21px;font-weight:800;letter-spacing:.3px}.logo span{color:#ffcbff}
+main{width:min(680px,92%);margin:48px auto 32px}.hero{text-align:center;margin-bottom:26px}.hero h1{font-size:clamp(30px,7vw,46px);line-height:1.1;margin:0 0 12px}.hero p{color:#eee3ff;line-height:1.6;margin:0}
+.card{background:#170f38d9;border:1px solid #ffffff35;border-radius:22px;padding:22px;box-shadow:0 18px 55px #16052f55}
+label{display:block;font-weight:700;margin:0 0 10px}.inputrow{display:flex;gap:8px;flex-wrap:wrap}input{flex:1;min-width:180px;padding:15px 14px;border-radius:12px;border:1px solid #b7a4ff;background:#fff;color:#21133d;font-size:16px;outline:none}button{border:0;border-radius:12px;padding:14px 17px;background:linear-gradient(90deg,var(--pink),var(--purple));color:#fff;font-size:16px;font-weight:750;cursor:pointer}button:focus,input:focus{outline:3px solid #ffceff;outline-offset:2px}.primary{width:100%;margin-top:12px}.hint,.status{font-size:14px;line-height:1.6;color:var(--muted)}.status{margin-top:15px;overflow-wrap:anywhere}.features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}.feature{background:#ffffff12;border:1px solid #ffffff20;border-radius:14px;padding:12px;text-align:center;font-size:13px}.feature b{display:block;margin-bottom:5px;font-size:15px}footer{text-align:center;color:#d8cff7;font-size:12px;padding:10px 20px 30px}a{color:#ffd5ff}
+@media(max-width:420px){main{margin-top:32px}.card{padding:16px}.features{grid-template-columns:1fr}.inputrow button{flex:1}}
+</style>
+</head>
+<body>
+<header><div class="logo">⬇ <span>Sky</span>Save</div><div aria-label="Free demo">FREE DEMO</div></header>
+<main>
+<section class="hero"><h1>Video Downloader</h1><p>নিজের বা অনুমতিপ্রাপ্ত ভিডিওর সরাসরি লিংক দিন<br>এবং ডাউনলোড চেষ্টা করুন।</p></section>
+<section class="card">
+<label for="videoUrl">ভিডিওর সরাসরি URL পেস্ট করুন</label>
+<div class="inputrow"><input id="videoUrl" type="url" placeholder="https://example.com/video.mp4" autocomplete="url"><button id="pasteBtn" type="button">Paste</button></div>
+<button class="primary" id="downloadBtn" type="button">Download Video</button>
+<div class="status" id="status" role="status" aria-live="polite">নোট: এই বিনামূল্যের ডেমো সরাসরি মিডিয়া লিংক (যেমন .mp4 বা .webm) নিয়ে কাজ করে। TikTok/Instagram-এর পেজ লিংক থেকে ভিডিও বের করে না।</div>
+<div class="features"><div class="feature"><b>📱 Mobile</b>মোবাইল-ফ্রেন্ডলি</div><div class="feature"><b>🆓 Free</b>হোস্টিংয়ে আলাদা খরচ নেই</div><div class="feature"><b>🔒 Simple</b>লিংক আপনার ব্রাউজারেই থাকে</div></div>
+</section>
+</main>
+<footer>SkySave demo • কেবল নিজের বা ডাউনলোডের অনুমতি থাকা ভিডিও ব্যবহার করুন।</footer>
+<script>
+const input=document.getElementById('videoUrl'),status=document.getElementById('status');
+document.getElementById('pasteBtn').addEventListener('click',async()=>{
+ try{input.value=await navigator.clipboard.readText();status.textContent='লিংক পেস্ট হয়েছে। এখন Download Video চাপুন।'}
+ catch(e){input.focus();status.textContent='Paste কাজ না করলে বক্সে চাপ দিয়ে ধরে রাখুন, তারপর Paste নির্বাচন করুন।'}
+});
+document.getElementById('downloadBtn').addEventListener('click',()=>{
+ let url;try{url=new URL(input.value.trim())}catch(e){status.textContent='সঠিক সম্পূর্ণ URL দিন, যেমন https://example.com/video.mp4';return}
+ if(!['http:','https:'].includes(url.protocol)){status.textContent='শুধু http বা https লিংক ব্যবহার করুন।';return}
+ if(url.hostname==='example.com'){status.textContent='এটি উদাহরণ লিংক। আপনার অনুমতিপ্রাপ্ত ভিডিওর আসল সরাসরি URL দিন।';return}
+ status.textContent='ডাউনলোড চেষ্টা করা হচ্ছে… যদি ফাইল না নামে, লিংকটি সরাসরি ভিডিও ফাইল নাও হতে পারে বা সার্ভার ডাউনলোড ব্লক করতে পারে।';
+ const a=document.createElement('a');a.href=url.href;a.download='video';a.rel='noopener';document.body.appendChild(a);a.click();a.remove();
+});
+</script>
+</body>
+</html>
